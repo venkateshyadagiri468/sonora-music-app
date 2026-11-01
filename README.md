@@ -98,9 +98,11 @@ graph TD
 
 - **Mechanics**: Each session designates a session host. Playback events (play, pause, seek, track transition) trigger atomic database updates containing a monotonic `sequence_number` and anchor timestamp `updated_at`.
 - **Drift Compensation**: Subscribed clients calculate delta drift upon receiving updates via WebSocket:
-  $$\Delta t = t_{\text{local}} - t_{\text{updated\_at}}$$
-  $$\text{Adjusted Position} = \text{position\_ms} + \Delta t$$
-- If the difference between the local player head and the adjusted target exceeds $250\text{ ms}$, the client initiates a micro-seek to synchronize playback without audible stuttering.
+  ```text
+  Δt = t_local - t_updated_at
+  Target Position = position_ms + Δt
+  ```
+- If the difference between the local player head and the adjusted target exceeds 250 ms, the client initiates a micro-seek to synchronize playback without audible stuttering.
 - **Presence Tracking**: Member ingress and egress are tracked using Supabase presence heartbeats, keeping the active participant list synchronized.
 
 ### 2. Native Background Playback & Interruption Management
